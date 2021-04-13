@@ -44,7 +44,7 @@ function Board({ nrows =6, ncols =6, chanceLightStartsOn=.2  }) {
   function hasWon() {
     //Check the board in state to determine whether the player has won.
     debugger;
-
+    // Use of row and cell ??
     const gameStatus = board.every(row => row.every(cell => !cell));
     return gameStatus;
   }
@@ -54,7 +54,7 @@ function Board({ nrows =6, ncols =6, chanceLightStartsOn=.2  }) {
 
     // Use of oldBoard here????  Value of oldBoard???
     setBoard(oldBoard => {
-      
+
       // Using .map(Number) ?????
       const [y, x] = coord.split("-").map(Number);
 
