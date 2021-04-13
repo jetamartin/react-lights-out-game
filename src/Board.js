@@ -29,7 +29,7 @@ import "./Board.css";
 
 function Board({ nrows =6, ncols =6, chanceLightStartsOn=.2  }) {
   const [board, setBoard] = useState(createBoard());
-  debugger;
+  // debugger;
   
 
   /** create a board nrows high/ncols wide, each cell randomly lit or unlit */
@@ -38,20 +38,27 @@ function Board({ nrows =6, ncols =6, chanceLightStartsOn=.2  }) {
     for (let i = 0; i < nrows; i++) {
       initialBoard.push(Array.from ({ length: ncols}, () => Math.random() > chanceLightStartsOn ? true : false))
     }
-    debugger;
     return initialBoard;
   }
 
   function hasWon() {
-    // TODO: check the board in state to determine whether the player has won.
-    return board.every(row => row.every(cell => !cell));
+    //Check the board in state to determine whether the player has won.
+    debugger;
+
+    const gameStatus = board.every(row => row.every(cell => !cell));
+    return gameStatus;
   }
 
   function flipCellsAround(coord) {
-    debugger;
+    // debugger;
+
+    // Use of oldBoard here????  Value of oldBoard???
     setBoard(oldBoard => {
+      
+      // Using .map(Number) ?????
       const [y, x] = coord.split("-").map(Number);
-      debugger;
+
+      // debugger;
 
       const flipCell = (y, x, boardCopy) => {
         // if this coord is actually on board, flip it
@@ -61,7 +68,7 @@ function Board({ nrows =6, ncols =6, chanceLightStartsOn=.2  }) {
         }
       };
 
-      // TODO: Make a (deep) copy of the oldBoard
+      // Make a (deep) copy of the oldBoard
       const boardCopy = oldBoard.map(row => [...row]);
 
       // TODO: in the copy, flip this cell and the cells around it
@@ -71,17 +78,18 @@ function Board({ nrows =6, ncols =6, chanceLightStartsOn=.2  }) {
       flipCell(y - 1, x, boardCopy);
       flipCell(y + 1, x, boardCopy);
 
-
-      // TODO: return the copy
-      
+     
       return boardCopy;
     });
   }
 
   // if the game is won, just show a winning msg & render nothing else
+    // if the game is won, just show a winning msg & render nothing else
+    if (hasWon()) {
+      return <div>You Win!</div>;
+    }
 
-  // TODO
-
+ 
   // make table board
   let tblBoard = [];
 
