@@ -29,36 +29,39 @@ import "./Board.css";
 
 function Board({ nrows =6, ncols =6, chanceLightStartsOn=.2  }) {
   const [board, setBoard] = useState(createBoard());
-  // debugger;
-  
-
+ 
   /** create a board nrows high/ncols wide, each cell randomly lit or unlit */
   function createBoard() {
     let initialBoard = [];
     for (let i = 0; i < nrows; i++) {
-      initialBoard.push(Array.from ({ length: ncols}, () => Math.random() > chanceLightStartsOn ? true : false))
+      initialBoard.push(Array.from ({ length: ncols}, () => Math.random() < chanceLightStartsOn ))
     }
     return initialBoard;
   }
 
+  //Check the board in state to determine whether the player has won. All board cells contain "false" value
   function hasWon() {
-    //Check the board in state to determine whether the player has won.
-    debugger;
-    // Use of row and cell ??
-    const gameStatus = board.every(row => row.every(cell => !cell));
-    return gameStatus;
-  }
+  
+   // The every() method tests whether all elements in the array pass the test implemented by the provided function.
+    // If the test passes for all values in the array then it returns True otherwise if even one value in the array fails 
+    // the test it will return false. 
+    // Board is an array of arrays [[], [], [], etc]. So the row references an array inside the array.
+    // And the cell references a single element inside of the row array
+    // The nested use of the .every() allows you to test every element inside of each array. 
+    // Kind of the equivalent of nested for loops. 
+
+    return board.every(row => row.every(cell => !cell));
+   }
 
   function flipCellsAround(coord) {
-    // debugger;
-
-    // Use of oldBoard here????  Value of oldBoard???
+    // If the new state is computed using the previous state, you can pass a function to setState
+    // So in this case oldBoard represents the prior state value.The boardCopy returned value from the function passed
+    // in will represent the "new" state value
     setBoard(oldBoard => {
 
-      // Using .map(Number) ?????
+      // Convert the coord string "y - x" (e.g., "2-6") to [2,6] by removing "-" 
+      // and then converting string ("3") into numbers via Number() function.
       const [y, x] = coord.split("-").map(Number);
-
-      // debugger;
 
       const flipCell = (y, x, boardCopy) => {
         // if this coord is actually on board, flip it
@@ -68,17 +71,19 @@ function Board({ nrows =6, ncols =6, chanceLightStartsOn=.2  }) {
         }
       };
 
-      // Make a (deep) copy of the oldBoard
+      // Make a "deep" copy of the oldBoard
+      // A copy is made to avoid re-renders each time you are modifying the board. Changes are made to the boardcopy and
+      // when that is copy is returned it becomes the new board state and re-renders occur once based on the new values. 
       const boardCopy = oldBoard.map(row => [...row]);
 
-      // TODO: in the copy, flip this cell and the cells around it
+      // Flip the selected/click on cell and the cells around it
       flipCell(y, x, boardCopy);
       flipCell(y, x - 1, boardCopy);
       flipCell(y, x + 1, boardCopy);
       flipCell(y - 1, x, boardCopy);
       flipCell(y + 1, x, boardCopy);
 
-     
+      // Returning the boardCopy results in the state being set to the values in boardCopy
       return boardCopy;
     });
   }
@@ -90,14 +95,13 @@ function Board({ nrows =6, ncols =6, chanceLightStartsOn=.2  }) {
     }
 
  
-  // make table board
+  // make table board using HTML table structure (e.g., <tr> & <td>]
   let tblBoard = [];
 
   for (let y = 0; y < nrows; y++) {
     let row = [];
     for (let x = 0; x < ncols; x++) {
       let coord = `${y}-${x}`;
-      // debugger;
       row.push(
         <Cell
           key={coord}
